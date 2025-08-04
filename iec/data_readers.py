@@ -22,7 +22,7 @@ def get_coords(esmi):
             name, district, state = row["Location name"], row["District"], row["State"]
             try:
                 loc = geolocator(f"{location_name}, {district}, {state}")
-                if location:
+                if loc:
                     lat, long = loc.latitude, loc.longitude
                 else:
                     lat, long = None, None
