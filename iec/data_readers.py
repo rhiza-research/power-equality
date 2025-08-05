@@ -3,6 +3,16 @@ import pandas as pd
 from geopy.geocoders import Nominatim
 from tqdm import tqdm
 
+"""
+All functions named xx_to_standard convert the data format of a specific xx source to
+a standard format accepted by the analysis functions in this library. 
+
+The standard format has the following columns:
+1. id - measurement point identifier (location, uuid)
+2. time - timestamp of sample
+3. value - measured value
+"""
+
 ## Data readers for ESMI
 def get_coords(esmi):
     """Obtains lat, long estimates for ESMI data collection points.
@@ -32,5 +42,22 @@ def get_coords(esmi):
             locs.loc[i, "longitude"] = long
     return locs
 
+
+def esmi_to_standard(df):
+    cmap = {f"Min {i}" : i for i in range(60)}
+    cmap["Location name"] = "id"
+    df = df.rename(columns=cmap)
+    df = df.melt(
+        id_vars=["id", "Date", "Hour"],
+        var_name="minute",
+        value_name="voltage"
+    )
+    # Get timestamp
+    df["time"] = pd.to_datetime(
+        df["Date"] + ' ' + df["Hour"].astype(str) + ":" + df["minute"].astype(str).str.zfill(2),
+        format="%d-%m-%Y %H:%M"
+    )
+    df = df[["id", "time", "voltage"]]
+    return df
 
 
