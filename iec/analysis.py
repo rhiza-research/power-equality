@@ -29,9 +29,9 @@ def get_agg_stats(df, value="voltage"):
                                         vmean=(value, "mean"))\
            .reset_index()
     # Get avg of daily values by id
-    df = df.groupby(["id"]).agg(vmin=("avg_daily_min", "mean"),
-                                vmax=("avg_daily_max", "mean"),
-                                vmean=("avg_daily", "mean"))\
+    df = df.groupby(["id"]).agg(avg_daily_min=("vmin", "mean"),
+                                avg_daily_max=("vmax", "mean"),
+                                avg_daily=("vmean", "mean"))\
            .reset_index()
     
     return df
