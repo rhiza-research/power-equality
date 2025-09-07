@@ -15,6 +15,18 @@ def daily_profile(df, rez="hour", value="voltage"):
     df = df.rename(columns={"value" : value})
     return df
 
+def avg_daily_time(df, value="undervoltage"):
+    """Average daily time in given state by measurement point."""
+    # Get daily values by id
+    df["tidx"] = df["time"].dt.date
+    df = df.groupby(["id", "tidx"]).agg(vtot=(value, "sum"))\
+           .reset_index()
+    # Get avg of daily values by id
+    df = df.groupby(["id"]).agg(avg_daily=("vtot", "mean"))\
+           .reset_index()
+    
+    return df
+
 def get_agg_stats(df, value="voltage"):
     """Produces a set of aggregate statistics for a dataset.
 
