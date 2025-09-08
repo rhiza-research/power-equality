@@ -27,6 +27,11 @@ def avg_daily_time(df, value="undervoltage"):
     
     return df
 
+def get_multidf_mean(df_list):
+    merged_df = pd.concat(df_list, ignore_index=True)
+    rez = merged_df.groupby(['id', 'tidx'], as_index=False)['voltage'].mean()
+    return rez
+
 def get_agg_stats(df, value="voltage"):
     """Produces a set of aggregate statistics for a dataset.
 

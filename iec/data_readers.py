@@ -69,6 +69,14 @@ def esmi_to_standard(df, outage=True):
     df = _add_outage_time(df, add_out_col = True)
     return df
 
+## Data readers for nLine
+
+def nline_to_standard(df):
+    df = df[["time", "respondent_id", "voltage", "frequency",
+             "site_id"]]
+    df["time"] = pd.to_datetime(df["time"], errors='coerce')
+    df = _add_outage_time(df, add_out_col = True)
+    return df
 
 def _add_outage_time(df, out_thresh=5, vnom=230, add_out_col = False):
     """Identifies outage periods based on recorded voltage."""
@@ -77,13 +85,6 @@ def _add_outage_time(df, out_thresh=5, vnom=230, add_out_col = False):
     df.loc[out_times, "voltage"] = np.nan
     # Add a new outage time column
     if add_out_col:
-        df["outage"] = 0
+        df.loc[:, "outage"] = 0
         df.loc[out_times, "outage"] = 1
-    return df
-
-## Data readers for nLine
-
-def nline_to_standard(df):
-    df = df[["time", "respondent_id", "voltage", "frequency",
-             "site_id", "power_source"]]
     return df
