@@ -46,12 +46,11 @@ def process(input_path, output_path, location_metadata_path):
     # add the value name and location
     df["value_name"] = VALUE_NAME
     coords = location_lookup.set_index("id")[["lat", "lon"]]
-    df["location"] = df["id"].map(
-        lambda name: tuple(coords.loc[name]) if name in coords.index else None
-    )
+    df = df.merge(coords, how="left", left_on="id", right_index=True)
+    df = df.rename(columns={"lat": "latitude", "lon": "longitude"})
 
     # sort the data and reset the index
-    df = df[["id", "time", "value", "value_name", "location"]]
+    df = df[["id", "time", "value", "value_name", "latitude", "longitude"]]
     df = df.sort_values(["id", "time"]).reset_index(drop=True)
 
     # save to the output path
