@@ -7,7 +7,11 @@ def process_all_files(processor, input_dir, output_dir, **kwargs):
         if file.endswith(".xlsx"):
             print(f"Processing {file}")
             output_file = file.replace(".xlsx", "_processed.csv")
-            processor(os.path.join(input_dir, file), os.path.join(output_dir, output_file), **kwargs)
+            try:
+                processor(os.path.join(input_dir, file), os.path.join(output_dir, output_file), **kwargs)
+            except Exception as e:
+                print(f"Error processing {file}: {e}")
+                continue
 
 
 if __name__ == "__main__":
