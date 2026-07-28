@@ -7,7 +7,8 @@ The standard format has the following columns:
 2. time [datetime] - timestamp of sample
 3. value [float] - measured value
 4. value name - name of value; must be one of the identifier strings documented below. 
-4. location [tuple (lat, lon)] - location of measurement
+5. latitude [float] - latitude of measurement
+6. longitude [float] - longitude of measurement
 
 Values
 ------
